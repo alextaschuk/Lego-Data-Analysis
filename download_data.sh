@@ -26,21 +26,23 @@ urls=(
 mkdir -p data/raw
 
 for url in "${urls[@]}"; do
-  file=$(basename "${url%%\?*}")
-  dest="data/raw/$file"
+    file=$(basename "${url%%\?*}")
+    dest="data/raw/$file"
 
-  if [[ -f "$dest" ]]; then
+    if [[ -f "$dest" ]]; then
     echo "Skipping existing file: $dest"
     continue
-  fi
+    fi
 
-  echo "Downloading $url -> $dest"
-  curl --fail --location --progress-bar --output "$dest" "$url"
-  echo "Downloaded: $dest"
+    echo "Downloading $url -> $dest"
+    curl --fail --location --progress-bar --output "$dest" "$url"
+    echo "Downloaded: $dest"
 
-  echo "Unzipping $dest -> data/raw/"
-  unzip -o "$dest" -d data/raw/
-  echo "Unzipped: $dest"
+    echo "Unzipping $dest -> data/raw/"
+    unzip -o "$dest" -d data/raw/
+    echo "Unzipped: $dest"
+
+    rm -f "$dest"
 
 done
 
