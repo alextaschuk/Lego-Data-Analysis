@@ -1,3 +1,7 @@
 data/*
 
 .env
+pyproject.toml
+.gitignore
+.python-version
+uv.lock
