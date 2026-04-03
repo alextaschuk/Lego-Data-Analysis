@@ -83,10 +83,9 @@ bash scripts/bcp_upload.sh
 
 Source: [Rebrickable's LEGO Catalog Database Download](https://rebrickable.com/downloads/)
 
-<figure>
-  <img src="https://rebrickable.com/static/img/diagrams/downloads_schema_v3.png" alt="Schema Diagram for LEGO datafiles">
-  <figcaption align="center">Rebrickable's Schema Diagram for LEGO datafiles</figcaption>
-</figure>
+![Rebrickable's Schema Diagram for LEGO datafiles](https://rebrickable.com/static/img/diagrams/downloads_schema_v3.png)
+
+The `Transformation` column describes how a certain column's data type is changed during the cleaning process to make it SQL-compatible.
 
 **_Note_:** We only use the following tables from this database:
 
