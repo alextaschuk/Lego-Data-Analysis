@@ -20,17 +20,12 @@ CACHE_DIR = "db_cache"
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 def get_connection() -> pymssql.Connection:
-    # Extract just the 'cosc301' part from the host
-    short_server = os.environ["DB_HOST"].split('.')[0]
-
-    # Format user as username@servername
-    db_user = f"{os.environ['DB_USER']}@{short_server}"
-
+    '''Connect to the SQL database'''
     return pymssql.connect(
         server      = os.environ["DB_HOST"],
-        port        = int(os.environ.get("DB_PORT", 1433)),
+        port        = os.environ["DB_PORT"],
         database    = os.environ["DB_NAME"],
-        user        = db_user,
+        user        = os.environ["DB_USER"],
         password    = os.environ["DB_PASSWORD"],
         tds_version = "7.4",
     )
@@ -47,10 +42,10 @@ def get_cached_query(query_str: str, table_name: str) -> pd.DataFrame:
     cache_path = os.path.join(CACHE_DIR, f"{table_name}.pkl")
 
     if os.path.exists(cache_path):
-        print(f"Loading {table_name} from cache...")
+        print(f"Loading table '{table_name}' from the cache...")
         return pd.read_pickle(cache_path)
 
-    print(f"Querying {table_name} from databased...")
+    print(f"Querying table '{table_name}' the from Azure database...")
     df = query(query_str)
     df.to_pickle(cache_path)
     return df

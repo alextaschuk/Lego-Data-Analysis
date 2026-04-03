@@ -138,7 +138,7 @@ def clean_sets(theme_root: dict[str, str]) -> set[str]:
             if theme_root.get(theme_id, "") in EXCLUDED_THEMES:
                 skipped_rows += 1
                 continue
-            if row["num_parts"].strip() == "0":
+            if int(row["num_parts"].strip()) < 20:
                 skipped_rows += 1
                 continue
             writer.writerow([
