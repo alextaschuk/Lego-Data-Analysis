@@ -76,3 +76,171 @@ To upload the cleaned data, run:
 ```bash
 bash scripts/bcp_upload.sh
 ```
+
+---
+
+## Data Dictionary
+
+Source: [Rebrickable's LEGO Catalog Database Download](https://rebrickable.com/downloads/)
+
+<figure>
+  <img src="https://rebrickable.com/static/img/diagrams/downloads_schema_v3.png" alt="Schema Diagram for LEGO datafiles">
+  <figcaption align="center">Rebrickable's Schema Diagram for LEGO datafiles</figcaption>
+</figure>
+
+**_Note_:** We only use the following tables from this database:
+
+- colors
+- inventories
+- inventory_parts
+- inventory_sets
+- sets
+- themes
+
+---
+
+### `themes`
+
+Theme categories (e.g., Star Wars and Technic).
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `id` | INT | No | Unique theme id (PK) |   |
+| `name` | VARCHAR(256) | No | Display name of the theme |   |
+| `parent_id` | INT | Yes | References `themes.id` for sub-themes; NULL if top-level | Empty string → `NULL` |
+
+---
+
+### `colors`
+
+Brick colors.
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `id` | INT | No | Unique color id (PK) |   |
+| `name` | VARCHAR(200) | No | Human-readable color name (e.g., "Bright Red") |   |
+| `rgb` | VARCHAR(6) | No | Hex RGB value without `#` prefix|   |
+| `is_trans` | BIT | No | 1 if the color is transparent, 0 otherwise | `True`/`False` → `1`/`0` |
+
+---
+
+### `sets`
+
+Individual LEGO sets.
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `set_num` | VARCHAR(20) | No | Unique set id (PK) |   |
+| `name` | VARCHAR(256) | No | Official set name |   |
+| `year` | INT | No | Year the set was released |   |
+| `theme_id` | INT | No | FK to `themes.id` |   |
+| `num_parts` | INT | No | Total number of parts in the set |   |
+
+---
+
+### `inventories`
+
+Versioned part lists associated with a set. A set may have multiple inventory versions.
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `id` | INT | No | Unique inventory id (PK) |   |
+| `version` | INT | No | Version number of this inventory |   |
+| `set_num` | VARCHAR(20) | No | FK to `sets.set_num` |   |
+
+---
+
+### `inventory_sets`
+
+Sets that are included inside other sets.
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `inventory_id` | INT | No | FK to `inventories.id` |   |
+| `set_num` | VARCHAR(20) | No | FK to `sets.set_num` of the included set |   |
+| `quantity` | INT | No | Number of times the set appears in the inventory |   |
+
+---
+
+### `part_categories`
+
+Top-level groupings of LEGO parts by type (e.g., "Bricks", "Plates").
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `id` | INT | No | Unique category id (PK) |   |
+| `name` | VARCHAR(200) | No | Category name |   |
+
+---
+
+### `parts`
+
+Individual LEGO part molds, independent of color.
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `part_num` | VARCHAR(20) | No | Unique part id (PK) |   |
+| `name` | VARCHAR(250) | No | Descriptive part name |   |
+| `part_cat_id` | INT | No | FK to `part_categories.id` |   |
+
+---
+
+### `inventory_parts`
+
+The specific parts (with colors and quantities) that make up each inventory.
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `inventory_id` | INT | No | FK to `inventories.id` |   |
+| `part_num` | VARCHAR(20) | No | FK to `parts.part_num` |   |
+| `color_id` | INT | No | FK to `colors.id` |   |
+| `quantity` | INT | No | Number of this part/color combination in the inventory |   |
+| `is_spare` | BIT | No | 1 if this is a spare part, 0 otherwise | `True`/`False` → `1`/`0` |
+
+---
+
+### `minifigs`
+
+LEGO minifigures, which can be included in set inventories.
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `fig_num` | VARCHAR(20) | No | Unique minifigure id (PK) |   |
+| `name` | VARCHAR(256) | No | Minifigure name |   |
+| `num_parts` | INT | No | Number of parts that make up the minifigure |   |
+
+---
+
+### `inventory_minifigs`
+
+Minifigures included in a given inventory.
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `inventory_id` | INT | No | FK to `inventories.id` |   |
+| `fig_num` | VARCHAR(20) | No | FK to `minifigs.fig_num` |   |
+| `quantity` | INT | No | Number of this minifigure in the inventory |   |
+
+---
+
+### `elements`
+
+Maps physical LEGO element IDs (as printed on bags/boxes) to a part + color combination.
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `element_id` | VARCHAR(10) | No | Official LEGO element ID (PK) |   |
+| `part_num` | VARCHAR(20) | No | FK to `parts.part_num` |   |
+| `color_id` | INT | No | FK to `colors.id` |   |
+
+---
+
+### `part_relationships`
+
+Describes mold/print/alternate relationships between parts.
+
+| Field | Type | Nullable | Description | Transformation |
+|---|---|---|---|---|
+| `rel_type` | VARCHAR(1) | No | Relationship type code: `A` = Alternate, `M` = Mold, `P` = Print, `R` = Pair, `T` = Sub |   |
+| `child_part_num` | VARCHAR(20) | No | FK to `parts.part_num` of the derived/child part |   |
+| `parent_part_num` | VARCHAR(20) | No | FK to `parts.part_num` of the base/parent part |   |
