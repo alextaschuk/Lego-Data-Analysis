@@ -49,11 +49,11 @@ load_table() {
     echo "  Done: $table"
 }
 
-# upload the tables
-load_table "themes"         "${CLEAN_DIR}/themes.tsv"
-load_table "colors"         "${CLEAN_DIR}/colors.tsv"
-load_table "sets"           "${CLEAN_DIR}/sets.tsv"
-load_table "inventory_sets" "${CLEAN_DIR}/inventory_sets.tsv"
+load_table "themes"          "${CLEAN_DIR}/themes.tsv"
+load_table "colors"          "${CLEAN_DIR}/colors.tsv"
+load_table "sets"            "${CLEAN_DIR}/sets.tsv"
+load_table "inventories"     "${CLEAN_DIR}/inventories.tsv"
+load_table "inventory_sets"  "${CLEAN_DIR}/inventory_sets.tsv"
 load_table "inventory_parts" "${CLEAN_DIR}/inventory_parts.tsv"
 
 echo ""

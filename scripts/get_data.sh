@@ -14,6 +14,7 @@ urls=(
     "https://cdn.rebrickable.com/media/downloads/themes.csv.zip?1775032487.1835225"
     "https://cdn.rebrickable.com/media/downloads/inventory_parts.csv.zip?1775032522.0643675"
     "https://cdn.rebrickable.com/media/downloads/colors.csv.zip?1775032487.2275236"
+    "https://cdn.rebrickable.com/media/downloads/inventories.csv.zip?1775032522.244372"
 )
 
 mkdir -p data/raw # download files to this directory
