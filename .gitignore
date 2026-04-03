@@ -1,7 +1,9 @@
 data/*
+figures/*
 
 .env
 pyproject.toml
 .gitignore
 .python-version
 uv.lock
+__pycache__/db.cpython-313.pyc
