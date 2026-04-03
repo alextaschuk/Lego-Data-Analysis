@@ -7,3 +7,5 @@ pyproject.toml
 .python-version
 uv.lock
 __pycache__/db.cpython-313.pyc
+db_cache/*
+__pycache__/db.cpython-314.pyc
