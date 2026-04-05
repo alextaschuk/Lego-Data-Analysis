@@ -1,5 +1,12 @@
 # COSC 301 End-to-End Data Analytics Pipeline Project
 
+## Video Demo
+
+
+
+https://github.com/user-attachments/assets/838f0ed6-986c-482a-96d5-b3247cb861a7
+
+
 ## Setup
 
 **Prerequisites**
